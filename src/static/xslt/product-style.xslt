@@ -14,9 +14,16 @@
       <h2><xsl:value-of select="name"/></h2>
       <p><xsl:value-of select="category"/></p>
       <p class="price">$<xsl:value-of select="price"/></p>
-      <button class="add-to-cart">Ajouter au panier</button>
+      <button 
+        class="add-to-cart" 
+        data-product-id="{id}"
+        data-product-name="{name}"
+        data-product-price="{price}"
+        data-product-image="{image_link}"
+        onclick="addToCart(this)">
+        Ajouter au panier
+      </button>
     </div>
   </xsl:template>
-  
 
 </xsl:stylesheet>
