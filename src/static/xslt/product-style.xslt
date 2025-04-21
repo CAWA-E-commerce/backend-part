@@ -10,10 +10,11 @@
   
   <xsl:template match="product">
     <div class="product-card">
+      <img src="{image_link}" alt="{name}" class="product-image"/>
       <h2><xsl:value-of select="name"/></h2>
-      <p><strong>Category:</strong> <xsl:value-of select="category"/></p>
-      <p><strong>Price:</strong> $<xsl:value-of select="price"/></p>
-      <p><strong>Stock:</strong> <xsl:value-of select="stock"/></p>
+      <p><xsl:value-of select="category"/></p>
+      <p class="price">$<xsl:value-of select="price"/></p>
+      <button class="add-to-cart">Ajouter au panier</button>
     </div>
   </xsl:template>
   
