@@ -87,12 +87,26 @@ def query_xpath():
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    
+
     results = []
     for row in rows:
-        results.extend([str(h) for h in row[0]])
-    
-    return jsonify({"results": results})
+        for item in row[0]:
+            if isinstance(item, bytes):
+                clean = item.decode("utf-8").strip()
+            elif isinstance(item, etree._Element):
+                clean = etree.tostring(item, encoding="unicode", pretty_print=True).strip()
+            else:
+                clean = str(item).strip()
+
+            clean = re.sub(r'^["{]*(.*?)[}"\s]*$', r'\1', clean)
+
+            results.append(clean)
+
+    xml_result = "<results>" + "".join(results) + "</results>"
+    return Response(xml_result, mimetype="application/xml")
+
+
+
 
 @products_bp.route("/products/category/<string:category>", methods=["GET"])
 def get_products_by_category(category):

@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="sample_product.dtd"?>
 <product id="1">
     <name>Smartphone X Pro</name>
     <category>Electronics</category>
     <price>899.99</price>
     <stock>15</stock>
-    <image_link>https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60</image_link>
+    <image_link>https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&amp;auto=format&amp;fit=crop&amp;q=60</image_link>
 </product>

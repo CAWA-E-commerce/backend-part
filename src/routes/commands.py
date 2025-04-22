@@ -98,21 +98,21 @@ def create_command():
     
     return jsonify({"message": f"Command added with id {new_id} and customer_id {new_customer_id}"}), 201
 
-@commands_bp.route("/commands/xpath", methods=["POST"])
-def query_command_xpath():
-    xpath = request.json.get("xpath")
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT xpath(%s, data::xml) AS results FROM commands", (xpath,))
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
+# @commands_bp.route("/commands/xpath", methods=["POST"])
+# def query_command_xpath():
+#     xpath = request.json.get("xpath")
+#     conn = get_db_connection()
+#     cur = conn.cursor()
+#     cur.execute("SELECT xpath(%s, data::xml) AS results FROM commands", (xpath,))
+#     rows = cur.fetchall()
+#     cur.close()
+#     conn.close()
     
-    results = []
-    for row in rows:
-        results.extend([str(h) for h in row[0]])
+#     results = []
+#     for row in rows:
+#         results.extend([str(h) for h in row[0]])
     
-    return jsonify({"results": results})
+#     return jsonify({"results": results})
 
 @commands_bp.route("/commands/<int:command_id>", methods=["GET"])
 def get_command(command_id):
@@ -127,6 +127,33 @@ def get_command(command_id):
         return jsonify({"error": "Command not found"}), 404
     
     return Response(row[0], mimetype="application/xml")
+
+@commands_bp.route("/commands/xpath", methods=["POST"])
+def query_xpath():
+    xpath = request.json.get("xpath")
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT xpath(%s, data::xml) AS results FROM commands", (xpath,))
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    results = []
+    for row in rows:
+        for item in row[0]:
+            if isinstance(item, bytes):
+                clean = item.decode("utf-8").strip()
+            elif isinstance(item, etree._Element):
+                clean = etree.tostring(item, encoding="unicode", pretty_print=True).strip()
+            else:
+                clean = str(item).strip()
+
+            clean = re.sub(r'^["{]*(.*?)[}"\s]*$', r'\1', clean)
+
+            results.append(clean)
+
+    xml_result = "<results>" + "".join(results) + "</results>"
+    return Response(xml_result, mimetype="application/xml")
 
 @commands_bp.route("/commands/<int:command_id>", methods=["PUT"])
 def update_command(command_id):
