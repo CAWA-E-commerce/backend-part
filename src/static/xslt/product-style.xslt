@@ -13,7 +13,7 @@
       <img src="{image_link}" alt="{name}" class="product-image"/>
       <h2><xsl:value-of select="name"/></h2>
       <p><xsl:value-of select="category"/></p>
-      <p class="price">$<xsl:value-of select="price"/></p>
+      <p class="price"><xsl:value-of select="price"/>DA</p>
       <button 
         class="add-to-cart" 
         data-product-id="{id}"

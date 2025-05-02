@@ -8,18 +8,6 @@ import re
 products_bp = Blueprint("products", __name__)
 XSD_PATH = os.path.join(os.path.dirname(__file__), "..", "xsd", "product.xsd")
 
-@products_bp.route("/products", methods=["GET"])
-def get_all_products():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT id, data FROM products")
-    rows = cur.fetchall()
-    print("Query Results:", rows) 
-    cur.close()
-    conn.close()
-    
-    products_xml = "<products>" + "".join([r[1] for r in rows]) + "</products>"
-    return Response(products_xml, mimetype="application/xml")
 
 @products_bp.route("/products", methods=["POST"])
 def create_product():
@@ -63,20 +51,19 @@ def create_product():
     
     return jsonify({"message": f"Product added with id {new_id}"}), 201
 
-@products_bp.route("/products", methods=["DELETE"])
-def delete_all_products():
+@products_bp.route("/products", methods=["GET"])
+def get_all_products():
     conn = get_db_connection()
     cur = conn.cursor()
-    print("Deleting all products") 
-    cur.execute("DELETE FROM products")
-    row_count = cur.rowcount
-    # Reset the sequence
-    cur.execute("ALTER SEQUENCE products_id_seq RESTART WITH 1")
-    conn.commit()
+    cur.execute("SELECT id, data FROM products")
+    rows = cur.fetchall()
+    print("Query Results:", rows) 
     cur.close()
     conn.close()
     
-    return jsonify({"message": f"{row_count} products deleted"}), 200
+    products_xml = "<products>" + "".join([r[1] for r in rows]) + "</products>"
+    return Response(products_xml, mimetype="application/xml")
+
 
 @products_bp.route("/products/xpath", methods=["POST"])
 def query_xpath():
@@ -105,6 +92,22 @@ def query_xpath():
     xml_result = "<results>" + "".join(results) + "</results>"
     return Response(xml_result, mimetype="application/xml")
 
+
+
+@products_bp.route("/products", methods=["DELETE"])
+def delete_all_products():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    print("Deleting all products") 
+    cur.execute("DELETE FROM products")
+    row_count = cur.rowcount
+    # Reset the sequence
+    cur.execute("ALTER SEQUENCE products_id_seq RESTART WITH 1")
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    return jsonify({"message": f"{row_count} products deleted"}), 200
 
 
 
