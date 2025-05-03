@@ -49,7 +49,14 @@
       <body>
         <div class="container">
           <div class="header">
-            <h2 class="command-id">Commande ID: <xsl:value-of select="/command/@id"/></h2>
+            <h2 class="command-id">Commande #<xsl:value-of select="/command/@id"/></h2>
+            <span class="status status-{/command/@status}">
+              <xsl:choose>
+                <xsl:when test="/command/@status = 'Completed'">Complétée</xsl:when>
+                <xsl:when test="/command/@status = 'Pending'">En attente</xsl:when>
+                <xsl:otherwise><xsl:value-of select="/command/@status"/></xsl:otherwise>
+              </xsl:choose>
+            </span>
             <button class="delete-btn" onclick="deleteCommand('{/command/@id}')">
               <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -59,8 +66,10 @@
           </div>
           
           <div class="order-info">
-            <strong class="label">Date:</strong>
-            <xsl:value-of select="/command/order_date"/>
+            <span>
+              <strong class="label">Date:</strong>
+              <xsl:value-of select="/command/order_date"/>
+            </span>
           </div>
 
           <h3 class="items-title">Articles</h3>
@@ -68,11 +77,11 @@
             <xsl:for-each select="/command/items/item">
               <div class="item">
                 <div class="item-details">
-                  <span class="name">Produit: <xsl:value-of select="name"/></span>
-                  <span class="quantity">Quantité: <xsl:value-of select="quantity"/></span>
+                  <span class="name"><xsl:value-of select="name"/></span>
+                  <span class="quantity">Qté: <xsl:value-of select="quantity"/></span>
                 </div>
                 <div class="item-price">
-                  <xsl:value-of select="price"/> DA
+                  <xsl:value-of select="format-number(number(price), '0.00')"/> DA
                 </div>
               </div>
             </xsl:for-each>
