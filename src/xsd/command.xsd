@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="command">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customer_id" type="xs:positiveInteger" minOccurs="0"/>
+                <xs:element name="order_date" type="xs:date" minOccurs="0"/>
+                <xs:element name="items">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="item" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="product_id" type="xs:positiveInteger"/>
+                                        <xs:element name="name" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="quantity" type="xs:positiveInteger"/>
+                                        <xs:element name="price" type="xs:decimal"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

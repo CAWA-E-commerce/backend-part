@@ -1,0 +1,7 @@
+<!ELEMENT product (name,category,price,stock,image_link)>
+<!ATTLIST product id NMTOKEN #REQUIRED>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+<!ELEMENT stock (#PCDATA)>
+<!ELEMENT image_link (#PCDATA)>
