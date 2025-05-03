@@ -68,7 +68,7 @@
             <xsl:for-each select="/command/items/item">
               <div class="item">
                 <div class="item-details">
-                  <span class="product-id">Produit #<xsl:value-of select="product_id"/></span>
+                  <span class="name">Produit: <xsl:value-of select="name"/></span>
                   <span class="quantity">Quantité: <xsl:value-of select="quantity"/></span>
                 </div>
                 <div class="item-price">

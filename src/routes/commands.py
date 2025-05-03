@@ -61,10 +61,11 @@ def create_command():
         
         for item in xml_doc.xpath("//items/item"):
             product_id = item.xpath("product_id/text()")
+            name = item.xpath("name/text()")
             quantity = item.xpath("quantity/text()")
             price = item.xpath("price/text()")
-            if not (product_id and quantity and price):
-                return jsonify({"error": "Each item must have product_id, quantity, and price"}), 400
+            if not (product_id and quantity and name and price):
+                return jsonify({"error": "Each item must have product_id, quantity, name and price"}), 400
     except etree.XMLSyntaxError as e:
         return jsonify({"error": f"Invalid XML: {str(e)}"}), 400
     

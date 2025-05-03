@@ -12,6 +12,7 @@
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="product_id" type="xs:positiveInteger"/>
+                                        <xs:element name="name" type="xs:string" minOccurs="0"/>
                                         <xs:element name="quantity" type="xs:positiveInteger"/>
                                         <xs:element name="price" type="xs:decimal"/>
                                     </xs:sequence>
