@@ -79,17 +79,12 @@ def create_command():
     conn = get_db_connection()
     cur = conn.cursor()
     
-    # Generate a new random alphanumeric ID
     new_id = generate_random_id()
     
-    # Check that this ID doesn't already exist
     cur.execute("SELECT 1 FROM commands WHERE xpath('/command/@id', data::xml)::text[] = ARRAY[%s]", (new_id,))
     while cur.fetchone():
-        # If ID exists, generate a new one
         new_id = generate_random_id()
         cur.execute("SELECT 1 FROM commands WHERE xpath('/command/@id', data::xml)::text[] = ARRAY[%s]", (new_id,))
-        
-    # Get max customer ID to keep sequential for that field
     cur.execute("SELECT xpath('//command/customer_id/text()', data::xml) AS customer_ids FROM commands")
     rows = cur.fetchall()
     max_customer_id = 0
@@ -161,7 +156,6 @@ def get_command(command_id):
     conn = get_db_connection()
     cur = conn.cursor()
     
-    # Use xpath to find command with matching id attribute in the XML
     cur.execute("""
         SELECT data FROM commands 
         WHERE xpath('/command/@id', data::xml)::text[] = ARRAY[%s]
@@ -211,7 +205,6 @@ def update_command(command_id):
     conn = get_db_connection()
     cur = conn.cursor()
     
-    # Use xpath to find the command by XML id attribute
     cur.execute("""
         SELECT id FROM commands 
         WHERE xpath('/command/@id', data::xml)::text[] = ARRAY[%s]
@@ -223,7 +216,7 @@ def update_command(command_id):
         conn.close()
         return jsonify({"error": "Command not found"}), 404
         
-    db_id = result[0]  # Get the actual database ID
+    db_id = result[0] 
     
     cur.execute("SELECT xpath('//command/customer_id/text()', data::xml) AS customer_ids FROM commands WHERE id != %s", (db_id,))
     rows = cur.fetchall()
@@ -235,7 +228,6 @@ def update_command(command_id):
             except ValueError:
                 continue
     
-    # Keep the same command ID for updates
     xml_doc.set("id", command_id)
     new_customer_id = str(max_customer_id + 1)
     customer_id_elem = etree.Element("customer_id")
@@ -259,7 +251,6 @@ def update_command(command_id):
         conn.close()
         return jsonify({"error": f"Generated XML invalid: {str(errors)}"}), 400
     
-    # Update using the database ID
     cur.execute("UPDATE commands SET data = %s WHERE id = %s", (updated_xml, db_id))
     
     conn.commit()
@@ -276,7 +267,6 @@ def delete_command(command_id):
     cur = conn.cursor()
     print(f"Deleting command with ID: {command_id}")
     
-    # Use xpath to find and delete command by XML id attribute
     cur.execute("""
         DELETE FROM commands 
         WHERE xpath('/command/@id', data::xml)::text[] = ARRAY[%s]

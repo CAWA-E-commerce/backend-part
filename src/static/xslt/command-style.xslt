@@ -2,28 +2,23 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="html" indent="yes"/>
 
-  <!-- Create a variable to store the total -->
   <xsl:variable name="total-sum">
     <xsl:call-template name="calculate-total"/>
   </xsl:variable>
 
-  <!-- Template to calculate the total -->
   <xsl:template name="calculate-total">
     <xsl:variable name="sum">
       <xsl:for-each select="/command/items/item">
-        <!-- For each item, multiply price by quantity and add to running total -->
         <xsl:value-of select="number(price) * number(quantity)"/>
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
     </xsl:variable>
     
-    <!-- Now sum up all the products -->
     <xsl:call-template name="sum-list">
       <xsl:with-param name="list" select="$sum"/>
     </xsl:call-template>
   </xsl:template>
 
-  <!-- Template to sum a comma-separated list of numbers -->
   <xsl:template name="sum-list">
     <xsl:param name="list"/>
     <xsl:param name="result" select="0"/>

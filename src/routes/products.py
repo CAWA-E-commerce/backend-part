@@ -18,7 +18,6 @@ def create_product():
     if not valid:
         return jsonify({"error": str(errors)}), 400
     
-    # Remove XML declaration
     xml_data_clean = re.sub(r'<\?xml[^>]*\?>', '', xml_data).strip()
     
     try:
@@ -101,7 +100,6 @@ def delete_all_products():
     print("Deleting all products") 
     cur.execute("DELETE FROM products")
     row_count = cur.rowcount
-    # Reset the sequence
     cur.execute("ALTER SEQUENCE products_id_seq RESTART WITH 1")
     conn.commit()
     cur.close()
@@ -124,7 +122,6 @@ def get_products_by_category(category):
     matching_products = []
     for product in rows:
         product_id, product_data, categories = product
-        # Convert PostgreSQL array string (e.g., '{Phones}') to string
         category_str = categories.strip('{}') if categories else ''
         print(f"Product {product_id} category:", category_str)  
         if category_str.strip().lower() == category.lower():
@@ -163,7 +160,6 @@ def update_product(product_id):
     if not valid:
         return jsonify({"error": str(errors)}), 400
 
-    # Remove XML declaration
     xml_data_clean = re.sub(r'<\?xml[^>]*\?>', '', xml_data).strip()
 
     try:
