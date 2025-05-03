@@ -16,7 +16,7 @@
       <p class="price"><xsl:value-of select="price"/>DA</p>
       <button 
         class="add-to-cart" 
-        data-product-id="{id}"
+        data-product-id="{@id}"
         data-product-name="{name}"
         data-product-price="{price}"
         data-product-image="{image_link}"
